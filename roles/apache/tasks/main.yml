@@ -1,0 +1,39 @@
+---
+# tasks file for apache
+#- name: testing playbook
+#  import_playbook: etc/ansible/roles/apache/tasks/test.yml
+
+- name: set os family
+  set_fact:
+    serv: "{{ansible_os_family}}"
+
+- name: Redhat OS Block
+  block:   
+
+   - name: install apache
+     yum:
+       name: "{{pack}}"
+       state: "installed"
+ 
+   
+   - name: copy config
+     template:
+       src: "httpd.conf.j2"
+       dest: "/etc/httpd/conf/httpd.conf"
+     notify: restart
+ 
+   
+   - name: start service
+     service:
+       name: "{{ pack [0] }}"
+       state: "started"
+  when: (serv == "RedHat")
+   
+- name: block for debian
+  block: 
+
+   - name: install apache2
+     import_tasks: /etc/ansible/myplaybook/ubuntu-cm.yml
+  when: (serv == "Debian")
+
+

@@ -1,0 +1,20 @@
+- hosts: localhost
+  vars:
+    ansible_connection: local
+    #ansible_python_interpreter: "{{ansible_playbook_python}}"
+    user_name: "dbadmin"
+    host_name: "168.61.177.87"
+    group_name: "db-vm"
+  tasks:
+    - name: "adding host names"
+      add_host:
+        name: "{{host_name}}"
+        ansible_user: "{{user_name}}"
+        groups: "{{group_name}}"
+
+- hosts: dbadmin@168.61.177.87
+  tasks:
+    - name: install apache
+      yum:
+        name: "httpd"
+        state: "installed"

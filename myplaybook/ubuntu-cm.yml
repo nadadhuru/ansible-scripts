@@ -1,0 +1,14 @@
+- name: install apache
+  apt:
+    name: "apache2"
+    state: "latest"
+
+- name: copy config
+  template:
+    src: "ports.conf.j2"
+    dest: "/etc/apache2/ports.conf"
+
+- name: restart apache
+  service:
+    name: "apache2"
+    state: "restarted"

@@ -1,0 +1,15 @@
+---
+- hosts: db-vm
+  become: true
+  vars:
+    pubkey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUduLbzC+ZPorghgcZO2nYmRAT8z/2y16znMzCFuLNHHOv5SoqJaFXHcCBDpCvKtUMKJ96+cN6Yccxi/Umv3s3mIls/Hh+9UxWZMNDy7Afs6yIEHRTCTMv4b2obQGMBJGZCRZgrbmQd/vrlUB9WQRNLgDvKXoSW8jJUP5I69S/exCJFt1kf1KdZ5voUpM6KmobfIPOL0tZa7J+GWqASe3AFQicBJOmybXgVe7kFc5zWyZcR9RMoBAMkT9QaxqYp/Dv88gV4WaeHmYrMhSkQAy+RN+ZNF61EvgNdTKQK5sU4agteoyLtsrIp1ZAa9I0GkAUGUz5lI34KiNqYo6BukcZ root@www.myapache.com 
+    user_r: dbadmin
+
+  tasks:
+    - name: copy ssh keys on remote machine
+      lineinfile:
+        path: "/home/{{user_r}}/.ssh/authorized_keys"
+        line: '{{pubkey}}'
+    - name: printing
+      debug:
+        msg: "{{ pubkey }}" 

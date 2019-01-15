@@ -1,0 +1,34 @@
+---
+# tasks file for ansible-java
+
+# Load Java version using Variables via Include
+
+- name: load package variable
+  include_vars: "{{ansible_distribution}}.yml"
+  when: ansible_distribution == 'CentOS'
+
+# gather facts
+- name: gather facts
+  setup:
+    filter: "{{ansible_os_family}}"
+  register: facts
+
+# display facts
+- name: display facts
+  debug:
+    msg: "{{facts}}"
+
+# Include setup file based on OS
+
+- include_tasks: setup_Redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+# Setting up Java-Home path
+
+- name: setup java Home if configured
+  template:
+    src: java_home.sh.j2
+    dest: /etc/profile.d/java_home.sh
+    mode: 0644
+  when: java_home is defined and java_home
+

@@ -1,0 +1,8 @@
+- hosts: [cent-vm, ubuntu-vm]
+  become: true
+  
+  roles:
+    - "apache"
+
+#- name: test playbook import
+#  import_playbook: roles/apache/tasks/test.yml

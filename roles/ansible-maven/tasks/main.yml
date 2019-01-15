@@ -1,0 +1,25 @@
+---
+# tasks file for ansible-maven
+
+- name: create directory
+  file:
+    path: "{{maven_home}}"
+    state: directory
+    mode: 0755  
+  tags: create-home
+
+- name: Install package Maven
+  unarchive:
+    src: "{{maven_repo}}"
+    dest: "{{maven_home}}"
+    remote_src: yes
+
+- name: Create a maven.sh file in profiles.d folder to set Path
+  template:
+    src: maven.sh.j2
+    dest: /etc/profile.d/maven.sh
+
+- name: updating path
+  raw: source /etc/profile.d/maven.sh
+  args: 
+    executable: /bin/bash 

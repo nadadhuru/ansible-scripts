@@ -1,0 +1,9 @@
+---
+- name: gather fact
+  setup:
+    filter: ansible_os_family
+  register: fact
+
+- name: print fact
+  debug:
+    msg: "{{fact}}"

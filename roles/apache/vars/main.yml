@@ -1,0 +1,5 @@
+---
+# vars file for apache
+
+port: 60
+pack: ['httpd', 'httpd-tools']

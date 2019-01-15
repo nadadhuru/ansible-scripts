@@ -1,0 +1,7 @@
+---
+- hosts: cent-vm
+  become: true
+  gather_facts: true
+  
+  roles:
+    - "ansible-jenkins"

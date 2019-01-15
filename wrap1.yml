@@ -1,0 +1,19 @@
+# import_playbook: wrap.yml
+#- hosts: appserver
+#- import_playbook: roles/apache/tasks/test.yml
+- hosts: webserver
+  tasks:
+    - name: gather users
+      shell: |
+         echo "No of users: " $(ls /home | wc -l)
+      register: result1
+    - name: no of users
+      debug:
+        msg: "{{result1}}"
+    - name: import tasks
+      import_tasks: roles/apache/tasks/test.yml
+
+    - name: importing a role
+      import_role:
+        name: apache
+
