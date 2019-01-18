@@ -8,6 +8,11 @@
     mode: 0755  
   tags: create-home
 
+#- name: download maven
+#  get_url:
+#    url: "{{maven_repo}}"
+#    dest: "{{maven_home}}/a.zip"
+
 - name: Install package Maven
   unarchive:
     src: "{{maven_repo}}"

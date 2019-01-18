@@ -1,0 +1,77 @@
+---
+# tasks file for ansible-nexus
+
+- name: add user nexus
+  user:
+    name: "nexus"
+
+- name: create directory for nexus
+  file:
+    path: "/opt/nexus"
+    state: directory
+    owner: nexus
+    group: nexus
+    mode: 0755
+
+#- name: change directory
+#  command:
+#  args:
+#    chdir: /opt/nexus
+
+- name: download nexus
+  unarchive:
+    src: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
+    dest: "/opt/nexus"
+    remote_src: yes
+
+- name: establish soft link
+  file:
+    src: '/opt/nexus/nexus-3.15.0-01'
+    dest: '/opt/nexus/nexus'
+    state: link
+
+- name: update Java Home
+  lineinfile:
+    path: "/opt/nexus/nexus/bin/nexus"
+    regexp: '#INSTALL4J_JAVA_HOME_OVERRIDE='
+    line: 'INSTALL4J_JAVA_HOME_OVERRIDE=/usr/lib/jvm/jre'
+
+- name: update Nexus Home
+  lineinfile:
+    path: "/opt/nexus/nexus/bin/nexus"
+    regexp: '#NEXUS_HOME='
+    line: 'NEXUS_HOME=/opt/nexus/nexus'
+
+- name: check firewall status
+  service:
+    name: "firewalld"
+    state: started
+
+- name: add nexus port
+  shell: |
+    firewall-cmd --zone=public --permanent --add-port=8081/tcp
+    firewall-cmd --reload
+
+
+- name: copy the files to init.d folder
+  copy:
+    src: "/opt/nexus/nexus/bin/nexus"
+    dest: "/etc/init.d/nexus"
+    owner: nexus
+    group: nexus
+    mode: 0755
+
+#- name: Enable systemd service
+#  shell: 'systemctl enable nexus.service'
+
+#- name: Restart systemd service
+#  shell: 'systemctl restart nexus.service'
+
+- name: Running nexus
+  shell: ./nexus run
+  args:
+    chdir: /opt/nexus/nexus/bin/
+  async: 900
+  poll: 0
+  tags: startnexus
+
