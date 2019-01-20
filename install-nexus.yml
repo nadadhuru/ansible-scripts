@@ -1,4 +1,4 @@
-- hosts: cent-vm
+- hosts: stage 
   become: true
   gather_facts: true
   roles:

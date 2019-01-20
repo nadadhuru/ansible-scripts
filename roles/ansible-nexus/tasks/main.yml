@@ -23,6 +23,7 @@
     src: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
     dest: "/opt/nexus"
     remote_src: yes
+  tags: download
 
 - name: establish soft link
   file:
@@ -55,8 +56,9 @@
 
 - name: copy the files to init.d folder
   copy:
-    src: "/opt/nexus/nexus/bin/nexus"
-    dest: "/etc/init.d/nexus"
+    src: /opt/nexus/nexus/bin/nexus
+    dest: /etc/init.d/nexus
+    remote_src: yes
     owner: nexus
     group: nexus
     mode: 0755

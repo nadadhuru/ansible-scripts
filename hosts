@@ -41,7 +41,16 @@
 # leading 0s:
 
 ## db-[99:101]-node.example.com
-[cent-vm]
-vm1 ansible_host=192.168.56.11 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
 
+[build]
+control ansible_host=localhost ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[jenkins]
+jenkin ansible_host=192.168.56.13 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[stage]
+artifact ansible_host=192.168.56.12 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[app]
+appserver ansible_host=192.168.56.14 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
 

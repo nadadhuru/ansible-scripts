@@ -1,0 +1,73 @@
+---
+# tasks file for ansible-docker
+
+- name: uninstall docker versions
+  yum:
+    name: "{{items}}"
+    state: "absent"
+  
+- name: setup the repository
+  yum:
+    name: "{{item}}"
+    state: "installed"
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: download rpm and place it in yum repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: '/etc/yum.repos.d/docker-ce.repo'
+    
+#- name: setup stable repository
+#  yum_repository:
+#    name: "docker-ce"
+#    description: "docker-ce download file"
+#    baseurl: "https://download.docker.com/linux/centos/docker-ce.repo"
+#  become: yes
+
+- name: enable docker-ce-edge
+  shell: yum-config-manager --enable docker-ce-edge
+  register: edgeresult
+
+- name: print edge result
+  debug:
+    msg: "{{edgeresult}}"
+
+- name: enable docker-ce-test
+  shell: yum-config-manager --enable docker-ce-test
+  register: edgetest
+
+- name: print edge result
+  debug:
+    msg: "{{edgetest}}"
+
+#- name: install docker-ce
+#  shell: yum install docker-ce
+#  register: installresult
+#  tags: installce
+
+#- name: install verbose
+#  debug:
+#    msg: "{{installresult}}"
+
+- name: install docker
+  yum:
+    name: "docker-ce"
+    state: "latest"
+  tags: install
+
+- name: start docker
+  service:
+    name: docker
+    state: started
+
+- name: run a test docker container
+  command: docker run hello-world
+  register: testresult
+
+- name: display test container
+  debug:
+    msg: "{{testresult}}"
+
